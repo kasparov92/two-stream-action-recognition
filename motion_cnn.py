@@ -39,9 +39,9 @@ def main():
     #Prepare DataLoader
     data_loader = dataloader.Motion_DataLoader(
                         BATCH_SIZE=arg.batch_size,
-                        num_workers=8,
-                        path='/home/ubuntu/data/UCF101/tvl1_flow/',
-                        ucf_list='/home/ubuntu/cvlab/pytorch/ucf101_two_stream/github/UCF_list/',
+                        num_workers=12,
+                        path='/home/ubuntu/data/UCF101_optical_flow/step1/',
+                        ucf_list='/home/bassel/data/ucfTrainTestlist/',
                         ucf_split='01',
                         in_channel=10,
                         )
