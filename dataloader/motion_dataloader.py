@@ -181,8 +181,8 @@ class Motion_DataLoader():
 
 if __name__ == '__main__':
     data_loader =Motion_DataLoader(BATCH_SIZE=1,num_workers=1,in_channel=10,
-                                        path='/home/ubuntu/data/UCF101/tvl1_flow/',
-                                        ucf_list='/home/ubuntu/cvlab/pytorch/ucf101_two_stream/github/UCF_list/',
+                                   path='/home/bassel/data/UCF101_optical_flow/step1/',
+                                   ucf_list='/home/bassel/data/ucfTrainTestlist/',
                                         ucf_split='01'
                                         )
     train_loader,val_loader,test_video = data_loader.run()

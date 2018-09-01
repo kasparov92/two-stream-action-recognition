@@ -19,14 +19,14 @@ class spatial_dataset(Dataset):
         return len(self.keys)
 
     def load_ucf_image(self,video_name, index):
-        if video_name.split('_')[0] == 'HandstandPushups':
-            n,g = video_name.split('_',1)
-            name = 'HandStandPushups_'+g
-            path = self.root_dir + 'HandstandPushups'+'/separated_images/v_'+name+'/v_'+name+'_'
-        else:
-            path = self.root_dir + video_name.split('_')[0]+'/separated_images/v_'+video_name+'/v_'+video_name+'_'
+        # if video_name.split('_')[0] == 'HandstandPushups':
+        #     n,g = video_name.split('_',1)
+        #     name = 'HandstandPushups_'+g
+        #     path = self.root_dir + 'HandstandPushups'+'/v_'+name+'/{:05}.jpg'.format(index)
+        # else:
+        path = self.root_dir + video_name.split('_')[0]+'/v_'+video_name+'/{:05}.jpg'.format(index)
          
-        img = Image.open(path +str(index)+'.jpg')
+        img = Image.open(path)
         transformed_img = self.transform(img)
         img.close()
 
@@ -78,9 +78,26 @@ class spatial_dataloader():
         splitter = UCF101_splitter(path=ucf_list,split=ucf_split)
         self.train_video, self.test_video = splitter.split_video()
 
+    def generate_frame_count(self):
+        all_videos_dir = os.listdir(self.data_path);
+        dic = {};
+
+        for curr_category in all_videos_dir:
+            curr_dir = os.path.join(self.data_path, curr_category)
+
+            for video in  os.listdir(curr_dir):
+                num_frames = len(os.listdir(os.path.join(curr_dir, video)));
+                dic[video] = num_frames;
+
+        pickle.dump(dic, open('dataloader/dic/frame_count.pickle', 'wb'))
+
     def load_frame_count(self):
         #print '==> Loading frame number of each video'
-        with open('dic/frame_count.pickle','rb') as file:
+        pickle_path = 'dataloader/dic/frame_count.pickle'
+        if not os.path.exists(pickle_path):
+            self.generate_frame_count()
+
+        with open(pickle_path,'rb') as file:
             dic_frame = pickle.load(file)
         file.close()
 
@@ -161,7 +178,7 @@ class spatial_dataloader():
 if __name__ == '__main__':
     
     dataloader = spatial_dataloader(BATCH_SIZE=1, num_workers=1, 
-                                path='/home/ubuntu/data/UCF101/spatial_no_sampled/', 
-                                ucf_list='/home/ubuntu/cvlab/pytorch/ucf101_two_stream/github/UCF_list/',
+                                path='/home/bassel/data/UCF101/',
+                                ucf_list='/home/bassel/data/ucfTrainTestlist/',
                                 ucf_split='01')
     train_loader,val_loader,test_video = dataloader.run()
